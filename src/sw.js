@@ -34,7 +34,7 @@ console.log(
 
 
 addEventListener('fetch', event => {
-  
+
   if(event.request.url == viewerURL) {
     touch()
     return event.respondWith(viewer())
@@ -86,7 +86,12 @@ addEventListener('fetch', event => {
             [b.numericLiteral(count++)]
           ))
 
-          path.get("body", "body").unshift(track)
+          try {
+            path.get("body", "body").unshift(track)
+          } catch (e) {
+            console.log('unable to instrument function')
+          }
+
 
           this.traverse(path)
         }
