@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      body {font-family: sans-serif; margin:0}
+      ul {list-style: none; padding:0}
+      h2 {font-size: 1em; color: #000;padding:.5em}
+      canvas {background: #f5f5f3; width: 100vw}
+    </style>
+  </head>
+  <body>
+
+    <ul id="scripts"></ul>
+
+    <script type="text/javascript">
+      const channel = new BroadcastChannel('fns')
+
+      class UI {
+        constructor(href) {
+          const li = document.createElement('li')
+          const h2 = document.createElement('h2')
+          const canvas = document.createElement('canvas')
+
+          h2.innerText = href
+          Object.assign(canvas, {width: 500, height: 200})
+
+          li.appendChild(h2)
+          li.appendChild(canvas)
+          document.querySelector('#scripts').appendChild(li)
+
+          this.h = 0
+          this.ctx = canvas.getContext('2d')
+        }
+        plot(points, n) {
+          this.ctx.fillStyle = 'rgba(255,255,255,0.06)'
+          this.ctx.fillRect(0,0,500,100)
+          const id = this.ctx.getImageData(0,0,500,200)
+          this.ctx.clearRect(0,0,500,200)
+          this.ctx.putImageData(id, 0,2)
+
+          this.h = (this.h + 5) % 360
+
+          this.ctx.strokeStyle = `hsla(${this.h}, 50%, 50%, 0.8)`
+
+          this.ctx.beginPath()
+
+          const s = 500 / n
+          const sy = 100 / n
+
+          points.forEach((p, i) => {
+            if(i == 0) {
+              this.ctx.moveTo(points[i] * s, 5)
+            } else {
+              const cpx = points[i] * s
+              const cpy = (Math.abs(points[i-1] - points[i]) * sy) + 10
+              this.ctx.bezierCurveTo(cpx, cpy, cpx, cpy, points[i] * s, 5);
+            }
+
+          })
+
+          this.ctx.stroke()
+
+        }
+      }
+
+
+      const uiMap = new Map
+      channel.onmessage = function (ev) {
+        const data = ev.data
+
+        if(!uiMap.has(data.url)) {
+          uiMap.set(data.url, new UI(data.url))
+        }
+
+        if(data.calls)
+          uiMap.get(data.url).plot(data.calls, data.max)
+      }
+
+    </script>
+
+  </body>
+</html>

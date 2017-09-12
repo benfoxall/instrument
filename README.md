@@ -6,3 +6,7 @@
 
 * rewriting js in service worker
 * capturing calls locally
+
+## 2 + 3
+
+* initial graph plotting
