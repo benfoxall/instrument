@@ -3,13 +3,36 @@
   <head>
     <meta charset="utf-8">
     <title>testing</title>
+    <style media="screen">
+      body {
+        font-family: sans-serif;
+      }
+      #state {
+        margin-top: 3em;
+      }
+    </style>
   </head>
   <body>
 
+    <button id="a">Change background</button>
     <button id="b">Button</button>
-    <button onclick="navigator.serviceWorker.register('instrument.js', {scope: '/'})">Register Service Worker</button>
+    <script src="button.js"></script>
 
-    <script src="test-1.js"></script>
+
+    <div id="state"></div>
+    <script type="text/javascript">
+      navigator.serviceWorker.register('instrument.js', {scope: '.'})
+
+      // ignore this
+      .then(() => {
+        state.innerHTML = `Success: visit ${'instrument.html'.link('instrument.html')} to view function calls`
+
+        state.querySelector('a').target = '_blank'
+      })
+      .catch((e) => {
+        state.textContent = `Unable to register service worker ${e}`
+      })
+    </script>
 
   </body>
 </html>
