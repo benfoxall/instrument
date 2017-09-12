@@ -17,6 +17,13 @@ meta.onmessage = (ev) => {
   if(ev.data === 'ping') touch(5000)
 }
 
+const basename = str =>  {
+  const match = str.match(/http:\/\/.*\/(.*)/)
+  if(match) return match[1]
+  return str
+}
+
+
 addEventListener('fetch', event => {
 
   if(event.request.url.match(/view\-fns$/)) {
@@ -25,13 +32,15 @@ addEventListener('fetch', event => {
   }
 
   if(active === null) return
-
   if (event.request.method != 'GET') return;
 
   const request = event.request
 
+  const name = basename(event.request.url)
+
+
   // todo - maybe use headers
-  if(request.url.match(/\.js$/)) {
+  if(name.match(/\.js$/)) {
 
     const wrapName = '_' + Math.random().toString(32).split('.')[1]
 
@@ -44,14 +53,14 @@ addEventListener('fetch', event => {
       // console.log("RESPONSE", resp.)
 
       if(resp.type == 'opaque') {
-        console.log(`unable to rewrite ${event.request.url} (opaque)`)
+        console.log(`unable to rewrite ${name} (opaque)`)
         return resp
       }
 
       const code = await resp.text()
 
       meta.postMessage(JSON.stringify({
-        log: `rewriting ${event.request.url}`
+        log: `rewriting ${name}`
       }))
 
       const b = recast.types.builders
@@ -77,11 +86,11 @@ addEventListener('fetch', event => {
       const output = recast.print(ast).code
 
       meta.postMessage(JSON.stringify({
-        log: `served ${event.request.url}`
+        log: `served ${name}`
       }))
 
       return new Response(
-        `console.log('${wrapName}: ${count}fns ${event.request.url}')
+        `console.log('Instrumented: ${name} - ${count}fns ${wrapName}')
 
         const ${wrapName} = (() => {
 
@@ -93,7 +102,6 @@ addEventListener('fetch', event => {
 
           let calls
           const report = () => {
-            // console.log("POSTING ${wrapName}", calls.slice(0))
             channel.postMessage({
               url: '${event.request.url}',
               max: ${count},

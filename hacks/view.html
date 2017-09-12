@@ -32,16 +32,21 @@
         } catch (e) {}
       }
 
+      const basename = str =>  {
+        const match = str.match(/http:\/\/.*\/(.*)/)
+        if(match) return match[1]
+        return str
+      }
 
       const channel = new BroadcastChannel('fns')
 
-      class UI {
+      class Component {
         constructor(href) {
           const li = document.createElement('li')
           const h2 = document.createElement('h2')
           const canvas = document.createElement('canvas')
 
-          h2.innerText = href
+          h2.innerText = basename(href)
           Object.assign(canvas, {width: 500, height: 200})
 
           li.appendChild(h2)
@@ -60,7 +65,7 @@
 
           this.h = (this.h + 5) % 360
 
-          this.ctx.strokeStyle = `hsla(${this.h}, 50%, 50%, 0.8)`
+          this.ctx.strokeStyle = `hsla(${this.h}, 70%, 50%, 0.8)`
 
           this.ctx.beginPath()
 
@@ -89,7 +94,7 @@
         const data = ev.data
 
         if(!uiMap.has(data.url)) {
-          uiMap.set(data.url, new UI(data.url))
+          uiMap.set(data.url, new Component(data.url))
         }
 
         if(data.calls)
