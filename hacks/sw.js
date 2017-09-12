@@ -2,23 +2,28 @@ importScripts('recast.js')
 
 
 // only intercept requests when there's an active page
-let active = setTimeout(() => {
-  active = null
-}, 1000)
+let active
+
+// make active non-null for n milliseconds
+const touch = (n=1000) => {
+  clearTimeout(active)
+  active = setTimeout(() => active = null, n)
+}
+touch()
 
 // listen for pings from frontend to keep rewriting alive
 const meta = new BroadcastChannel('fns-meta')
-meta.onmessage = function (ev) {
-    if(ev.data === 'ping') {
-      clearTimeout(active)
-      active = setTimeout(() => {
-        active = null
-      }, 5000)
-    }
-  }
-
+meta.onmessage = (ev) => {
+  if(ev.data === 'ping') touch(5000)
+}
 
 addEventListener('fetch', event => {
+
+  if(event.request.url.match(/view\-fns$/)) {
+    touch()
+    return event.respondWith(viewer())
+  }
+
   if(active === null) return
 
   if (event.request.method != 'GET') return;
@@ -109,10 +114,13 @@ addEventListener('fetch', event => {
       )
 
     }());
-
-
   }
-
-
-
 })
+
+
+
+// TODO embed the viewer page in the service worker
+// to make it easier to share
+function viewer() {
+  return fetch('view.html')
+}
