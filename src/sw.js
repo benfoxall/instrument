@@ -129,7 +129,7 @@ addEventListener('fetch', event => {
             calls.push(id)
           }
 
-        })()
+        })();
 
         ${output}
         `
