@@ -6,15 +6,33 @@
     <style media="screen">
       body {font-family: sans-serif; margin:0}
       ul {list-style: none; padding:0}
-      h2 {font-size: 1em; color: #000;padding:.5em}
+      h2 {font-size: 1em; color: #000;padding:3vmin;}
+      h1 {padding: 3vmin;}
       canvas {background: #f5f5f3; width: 100vw}
+      hr {border:none;border-top:1px solid #000}
+      #log {font-size: .5em;color: #999;}
     </style>
   </head>
   <body>
 
+    <h1>Active. <span id="log">parsing xx</span></h1>
+    <hr />
+
     <ul id="scripts"></ul>
 
     <script type="text/javascript">
+      const meta = new BroadcastChannel('fns-meta')
+      setInterval(() => {meta.postMessage('ping')}, 2000)
+      meta.onmessage = (ev) => {
+        try {
+          const json = JSON.parse(ev.data)
+          if(json.log) {
+            log.innerText = json.log
+          }
+        } catch (e) {}
+      }
+
+
       const channel = new BroadcastChannel('fns')
 
       class UI {

@@ -1,8 +1,25 @@
 importScripts('recast.js')
 
-console.log("in service worker")
+
+// only intercept requests when there's an active page
+let active = setTimeout(() => {
+  active = null
+}, 1000)
+
+// listen for pings from frontend to keep rewriting alive
+const meta = new BroadcastChannel('fns-meta')
+meta.onmessage = function (ev) {
+    if(ev.data === 'ping') {
+      clearTimeout(active)
+      active = setTimeout(() => {
+        active = null
+      }, 5000)
+    }
+  }
+
 
 addEventListener('fetch', event => {
+  if(active === null) return
 
   if (event.request.method != 'GET') return;
 
@@ -28,7 +45,9 @@ addEventListener('fetch', event => {
 
       const code = await resp.text()
 
-      console.log(`rewriting ${event.request.url}`)
+      meta.postMessage(JSON.stringify({
+        log: `rewriting ${event.request.url}`
+      }))
 
       const b = recast.types.builders
       const ast = recast.parse(code)
@@ -51,6 +70,10 @@ addEventListener('fetch', event => {
       })
 
       const output = recast.print(ast).code
+
+      meta.postMessage(JSON.stringify({
+        log: `served ${event.request.url}`
+      }))
 
       return new Response(
         `console.log('${wrapName}: ${count}fns ${event.request.url}')
