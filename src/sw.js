@@ -24,10 +24,18 @@ const basename = str =>  {
   return str
 }
 
+const viewerURL = location.href.replace(/\.js$/, '.html')
+
+console.log(
+  '%c fns service worker running: visit %s to view calls',
+  'background: #222; color: #bada55;font-size:1.2em',
+  viewerURL
+)
+
 
 addEventListener('fetch', event => {
-
-  if(event.request.url.match(/view\-fns$/)) {
+  
+  if(event.request.url == viewerURL) {
     touch()
     return event.respondWith(viewer())
   }
