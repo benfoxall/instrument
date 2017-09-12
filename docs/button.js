@@ -1,4 +1,4 @@
-const button = document.querySelector('button')
+const button = document.querySelector('button#a')
 
 // setInterval(() => {
 //   randomcolour()
@@ -10,10 +10,6 @@ button.addEventListener('click', () => {
   console.log("Button was clicked")
 
   test()
-
-  if(Math.random()> 0.6) {
-    setTimeout(test, 10, 20)
-  }
 })
 
 function test(t) {
@@ -30,3 +26,15 @@ function randomcolour(t) {
 function nope() {
   console.log("NOPE")
 }
+
+document.querySelector('button#b')
+ .addEventListener('click', function () {
+   test(20)
+ }, false)
+
+
+
+document.querySelector('button#c')
+ .addEventListener('click', function () {
+   this.innerText = Math.random().toString(32)
+ }, false)
