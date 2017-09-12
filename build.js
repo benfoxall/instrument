@@ -19,7 +19,7 @@ fs.writeFile('dist/instrument.js', output, (err) => {
   console.log('Wrote to dist/instrument.js')
 })
 
-fs.writeFile('example/instrument.js', output, (err) => {
+fs.writeFile('docs/instrument.js', output, (err) => {
   if(err) throw err
-  console.log('Wrote to example/instrument.js')
+  console.log('Wrote to docs/instrument.js')
 })
