@@ -15,7 +15,7 @@
   </head>
   <body>
 
-    <h1>Active. <span id="log"></span></h1>
+    <h1>Active. <span id="log">reload original page get instrumented scripts</span></h1>
     <hr />
 
     <ul id="scripts"></ul>
@@ -71,10 +71,10 @@
 
           const s = 500 / n
           const sy = 100 / n
-
           points.forEach((p, i) => {
             if(i == 0) {
-              this.ctx.moveTo(points[i] * s, 5)
+              this.ctx.moveTo((points[i] * s)-2, 0)
+              this.ctx.lineTo(points[i] * s, 5)
             } else {
               const cpx = points[i] * s
               const cpy = (Math.abs(points[i-1] - points[i]) * sy) + 10
