@@ -1,5 +1,6 @@
 importScripts('recast.js')
-
+const viewer = () => fetch('view.html')
+/*SPLIT*/
 
 // only intercept requests when there's an active page
 let active
@@ -124,11 +125,3 @@ addEventListener('fetch', event => {
     }());
   }
 })
-
-
-
-// TODO embed the viewer page in the service worker
-// to make it easier to share
-function viewer() {
-  return fetch('view.html')
-}
