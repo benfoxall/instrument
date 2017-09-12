@@ -19,7 +19,7 @@ meta.onmessage = (ev) => {
 }
 
 const basename = str =>  {
-  const match = str.match(/http:\/\/.*\/(.*)/)
+  const match = str.match(/https?:\/\/.*\/(.*)/)
   if(match) return match[1]
   return str
 }
