@@ -10,6 +10,7 @@
       #state {
         margin-top: 3em;
       }
+      #buttons {padding: 1em 0}
       rect { fill: none; pointer-events: all; } circle { fill: none; stroke-width: 2.5px; }
 
       canvas, svg {
@@ -37,15 +38,22 @@
     <hr />
 
     <h3>buttons</h3>
-    <button id="a">change background</button>
-    <button id="b">animate background</button>
-    <button id="c">change text</button>
-    <script src="button.js"></script>
+    <div id="buttons">
+      <button id="a">change background</button>
+      <button id="b">animate background</button>
+      <button id="c">change text</button>
+      <input type="text" placeholder="red" id="color">
+      <script src="button.js"></script>
+    </div>
 
-    <h3>paper</h3>
-    <canvas id="canvas" width="300" height="300"></canvas>
-    <script type="text/javascript" src="paper-full.min.js"></script>
-    <script type="text/javascript" src="paper-draw.js"></script>
+    <h3>anime</h3>
+    <svg id="morphing" width="140" height="140" viewBox="0 0 140 140">
+      <g fill="none" fill-rule="evenodd">
+        <polygon class="polymorph" stroke-width="0" stroke="currentColor" points="70 24 119.574 60.369 100.145 117.631 50.855 101.631 3.426 54.369" fill="#000"></polygon>
+      </g>
+    </svg>
+    <script type="text/javascript" src="anime.js"></script>
+    <script type="text/javascript" src="anime-draw.js"></script>
 
     <h3>d3 <small><a href="https://bl.ocks.org/mbostock/1062544">particles</a></h3>
     <div class="d3"></div>
