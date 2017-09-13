@@ -8,4 +8,8 @@ This uses a service worker to instrument any JavaScript files, allowing you to v
 2. in a console, run: `navigator.serviceWorker.register('instrument.js', {scope: '/'})`
 3. visit `instrument.html` (served from the SW) to see live code calls
 
+### Demo
+
+[See live demo here](https://benjaminbenben.com/instrument/).  (it might take a few refreshes to get scripts through the service worker rather than the browser cache)
+
 ![screen shot](docs/screenshot.png)
